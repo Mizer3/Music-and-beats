@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes informations personnelles{% endblock %}
+
+{% block body %}
+        <div class="lien">
+            <a href="{{path('user')}}"><i class="fa-solid fa-backward mb-3 mt-2"></i></a>
+        </div>
+        <h1>Mes informations personelles</h1>
+        <div class="d-flex flex-row">
+        <div class="col-12 col-md-6 d-flex justify-content-center">
+            <img src={{asset('uploads/images/' ~ user.imageName )}} alt="Photo de profil" class="img-fluid img-user"/>
+        </div>
+        <table class="col-12 col-md-6 d-flex justify-content-center fw-bold">
+            <tr>
+                <td class="pt-3 pb-3">{{user.nom}}</td>
+            </tr>
+            <tr>
+                <td class="pb-3">{{user.prenom}}</td>
+            </tr>
+            <tr>
+                <td class="pb-3">{{user.pseudo}}</td>
+            </tr>
+            <tr>
+                <td class="pb-3">{{user.email}}</td>
+            </tr>
+            <tr>
+                <td class="pb-3">{{user.adresse}}</td>
+            </tr>
+            <tr>
+                <td class="pb-3">{{user.codePostal}}</td>
+            </tr>
+            <tr>
+                <td class="lien pb-3">
+                    <a href="{{path('app_user_user_edit')}}" >Modifier mes informations</a>
+                </td>
+            </tr>
+            <tr>
+                <td class="lien pb-3">
+                    <a href="{{path('app_forgot_password_request')}}" >Modifier mon mot de passe</a>
+                </td>
+            </tr>
+        </table>
+        </div>
+{% endblock %}

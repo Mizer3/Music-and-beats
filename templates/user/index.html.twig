@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+	{% if user is not defined %}{# MOI #}
+		<div class="justify-content-center d-flex">
+					<h1>
+						{% set hasPseudo = false %}
+						{% if app.user.pseudo is not null %}
+							{{ app.user.pseudo|capitalize }}
+							{% set hasPseudo = true %}
+						{% else %}
+							{{ app.user.nom|title }} 
+							{% if app.user.prenom is not null %}
+								{{ app.user.prenom|title }}
+							{% endif %}
+						{% endif %}
+					</h1>
+				</div>
+				<div class="row d-flex justify-content-center">
+					<div class="col-12 col-md-6 d-flex justify-content-center mt-5">
+						<img src={{asset("uploads/images/" ~ app.user.imageName)}} alt="Photo de profil" class="img-fluid img-user"/>
+					</div>
+					<div class="col-12 col-md-6 lien d-flex justify-content-center align-items-center flex-column">
+						{% if 'ROLE_BEATMAKER' in app.user.roles %}
+						<div class="description mb-5 justify-content-center">
+							<h3 class="text-center">Description</h3>
+							<p class="text-center">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus repellat id officia ex aspernatur quo corporis placeat commodi officiis laboriosam ullam aliquam molestiae accusamus modi, consectetur quos magnam, libero cupiditate!</p>
+						</div>
+						{% endif %}
+						<div class="d-flex flex-column align-items-center">
+							<a href="{{path('info')}}" class="mb-2 fw-bold">Informations personnelles</a>
+							<a href="" class="fw-bold">Historique des Comandes</a>
+							{% if 'ROLE_BEATMAKER' in app.user.roles %}{# JE SUIS BEATMAKER #}
+								<a href="{{path('app_user_beats_index')}}" class="fw-bold mt-3">Mes Beats</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+		
+	{% else %}{# LES AUTRES #}
+		<div class="justify-content-center d-flex">
+			<h1>
+				{% set hasPseudo = false %}
+				{% if user.pseudo is not null %}
+					{{ user.pseudo|capitalize }}
+					{% set hasPseudo = true %}
+				{% else %}
+					{{ user.nom|title }} 
+					{% if user.prenom is not null %}
+						{{ user.prenom|title }}
+					{% endif %}
+				{% endif %}
+			</h1>
+		</div>
+		<div class="row d-flex justify-content-center">
+			<div class="col-12 col-md-6 d-flex justify-content-center">
+				<img src={{asset("uploads/images/" ~ user.imageName)}} alt="Photo de profil" class="img-fluid img-user"/>
+			</div>
+
+			<div class="col-12 col-md-6 lien d-flex justify-content-center align-items-center flex-column">
+				<div class="description mb-5 justify-content-center">
+					<h3 class="text-center">Description</h3>
+					<p class="text-center">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus repellat id officia ex aspernatur quo corporis placeat commodi officiis laboriosam ullam aliquam molestiae accusamus modi, consectetur quos magnam, libero cupiditate!</p>
+				</div>
+				<div class="d-flex flex-column align-items-center">
+					<a href="{{path('app_user_beats_index_view', {id: user.id})}}" class="fw-bold mt-3">Beats</a>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+	{% endblock %}
+{% block javascripts %}
+<script>
+var currentPlayer = null;
+
+$(".bt-play").on("click", function(){
+    var player = $(this).parent().parent().find(".song");
+    var play = $(this).parent().parent();
+
+    if($(player).attr("data-playing")=="false"){
+        //console.log(currentPlayer);
+        //if($(player)!= $(currentPlayer)){
+            $(".song").each(function(){
+                $(this).trigger("pause");
+                $(this).attr("data-playing", "false");
+                $(this)[0].currentTime = 0;
+            });
+        //}
+        
+        $(play).addClass("play");
+        $(this).find("i").removeClass('fa-play');
+        $(this).find("i").addClass('fa-pause');
+        currentPlayer = $(player);
+        $(player).attr("data-playing", "true");
+        $(player).trigger("play");
+    }else{
+        $(player).attr("data-playing", "false");
+        $(player).trigger("pause");
+        $(play).removeClass("play");
+        $(this).find("i").addClass('fa-play');
+        $(this).find("i").removeClass('fa-pause');
+    }
+});
+function updateProgress(e){
+    var {duration, currentTime} = event.target;
+    var progressPercent = (currentTime / duration) * 100;
+    progress.style.width = `${progressPercent}%` ;
+}
+</script>
+{% endblock %}

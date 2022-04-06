@@ -1,0 +1,462 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-image: url(../images/Fond\ écran\ site.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    /* background-color: #0D0D0D; */
+}
+@font-face {
+    font-family: "sedgwick";
+    src: url('../fonts/sedgwick.ttf') format('truetype'),
+        url('../fonts/sedgwick.woff') format('woff');
+
+}
+
+/* HEADER */
+header{
+    height: auto;
+    width: 100%;
+    max-height: 150px;
+    background-color: #4843d9;
+    display: flex;
+    align-items: center;
+}
+.row{
+    display: contents;
+}
+.logo{
+    display: flex;
+    width: 80px;
+}
+.nav{
+    display: inline;
+    box-sizing: content-box;
+}
+.background-nav{
+    background-color: #4843d9 !important;
+}
+.btn-style{
+    background-color: #383ea6;
+    border: #0d0d0d 2px solid;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.img-size{
+    width: 30px;
+    height: 30px;
+}
+.basket{
+    height: 50px;
+    width: 50px;
+}
+/* MENU */
+.burger{
+    display: block;
+    /* z-index: 20; */
+    width: 43px;
+    cursor: pointer;
+    appearance: none;
+    background: none;
+    outline: none;
+    border: 2px solid #0d0d0d;
+    /* right: 15px; */
+    /* margin-top: -23px; */
+}
+.bg-meal{
+    display: flex;
+    left: 90px !important;
+}
+.burger .bar, .burger:after, .burger:before{
+    /* position: absolute;
+    z-index: 10000; */
+    content: '';
+    display: block;
+    width: 100%;
+    height: 5px;
+    background-color: #383ea6;
+    margin: 6px 0px;
+    transition: 0.4s;
+}
+.burger.active:before {
+    transform: rotate(-45deg) translate(-8px, 6px);
+}
+.burger.active:after {
+    transform: rotate(45deg) translate(-9px, -8px);
+}
+.burger.active .bar{
+    opacity: 0;
+}
+.menu{
+    position: fixed;
+    top: 80px;
+    right: -650px;
+    width: 30vw;
+    display: block;
+    z-index: 20;
+    background-color: #383ea6;
+    padding-top: 60px;
+    transition: 0.4s;
+}
+.menu.active{
+    right: 0%;
+}
+.menu a {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 16px;
+    text-align: center;
+    padding-top: 15px;
+    background-color: #383ea6;
+    color: #0d0d0d;
+    text-decoration: none;
+}
+.menu a:hover{
+    background-color: #4843d9;
+}
+
+/* CONTENU */
+main{
+    background-color: 	rgba(72, 67, 217,0.8);
+}
+.container{
+    width: 60%;
+    margin-top: 50px;
+    /* opacity: 0.5; */
+    margin-bottom: 100px;
+    color: #0d0d0d;
+    min-height: 500px;
+}
+.main{
+    justify-content: center;
+}
+.border-beatmaker{
+    border: #000 3px solid;
+}
+h1{
+    text-align: center;
+    font-size: 2.5rem;
+    padding-top: 20px;
+    font-family: "sedgwick";
+    color:#0d0d0d;
+}
+h2 h5{
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    font-family: "Phosphate";
+    color:#0d0d0d;
+}
+h5{
+    min-height: 30px;
+}
+/* FORMULAIRE */
+.form-control:focus{
+    box-shadow: 0 0 0 0.25rem #0D0D0D;
+}
+.form-control{
+    border: 1px solid black;
+}
+/* PROFIL */
+
+.img-profil{
+    /* clip-path: ellipse(30% 50%); */
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    height: 80px;
+    box-sizing: content-box;
+}
+.img-user{
+    width: 200px;
+    height: 160px;
+    /* object-fit: cover; */
+    border-radius: 50%;
+}
+.lien a{
+    color:#0d0d0d;
+    text-decoration: none;
+}
+.lien a:hover{
+    background-color: #4843d9;
+}
+.commande{
+    table-layout: auto;
+}
+.description{
+    background-color: white;    
+    border: 2px solid #0D0D0D;
+    border-radius: 10px;
+    box-sizing: content-box;
+}
+.input-beats{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.curseur{
+    cursor: pointer;
+}
+
+/* PANIER */
+.panier{
+    table-layout: auto;
+    border: 2px solid #0D0D0D;
+}
+/* PAIEMENT */
+
+.method-payment{
+    width: 50px;
+    /* background-color: #0D0D0D; */
+}
+
+
+/* INSTRU */
+.audio-container{
+    background-color: #000;
+    border-radius: 15px;
+    box-shadow: 0 20px 20px 0 #0d0d0d;
+    display: flex;
+    /* padding: 20px 30px; */
+    position: relative;
+    margin-top: 78px;
+    margin-bottom: 20px;
+    z-index: 10;
+    /* width: 100%; */
+}
+.img-container {
+    position: relative;
+    width: 80px;
+}
+.img-container a{
+    width: 80px;
+    height: 80px;
+}
+.img-cover{
+    border-radius: 50%;
+    object-fit: cover;
+    height: 80px;
+    width: inherit;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    animation: rotate 3s linear infinite;
+    animation-play-state: paused;
+}
+.audio-container.play .img-cover {
+    animation-play-state: running;
+}
+
+@keyframes rotate {
+    from {
+    transform: rotate(0deg);
+    }
+    to {
+    transform: rotate(360deg);
+    }
+}
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+.action-btn {
+    background-color: #000;
+    border: 0;
+    color: #4843d9;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 10px;
+    margin: 0 20px;
+}
+.action-btn.action-btn-big {
+    color: #4843d9;
+    font-size: 30px;
+}
+.action-btn:focus {
+    outline: 0;
+}
+.audio-info {
+    /* background-color: rgb(255, 166, 0); */
+    border-radius: 15px 15px 0 0;
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: calc(100% - 40px);
+    padding: 10px 10px 10px 15px;
+    opacity: 0;
+    transform: translateY(0%);
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    z-index: 0;
+}
+.audio-container.play .audio-info {
+    opacity: 1;
+    transform: translateY(-100%);
+}
+.audio-info h4 {
+    margin: 0;
+}
+.progress-container {
+    background: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px 0;
+    height: 4px;
+    width: 100%;
+}
+.progress {
+    background-color: #000;
+    border-radius: 5px;
+    height: 100%;
+    width: 50%;
+    transition: width 0.1s linear;
+}
+.img-basket{
+    width: 40px;
+    height: 40px;
+}
+
+/* BEATMAKER */
+
+.size{
+    height: 200px;
+}
+
+/* VOILE */
+#voile{
+    position: fixed;
+    z-index: 15;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.4);
+    display: none;
+}
+
+/* FOOTER */
+footer{
+    width: 100%;
+    height: 70px;
+    background-color: #4843d9;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+footer a{
+    text-decoration: none;
+    color: #0d0d0d;
+    flex-direction: row;
+    margin: 8px;
+}
+footer a:hover{
+    color:#0d0d0d;
+}
+/* // Small devices (landscape phones, 576px and up) */
+@media (max-width: 576px) {
+    body{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    }
+    body::-webkit-scrollbar {
+        display: none;
+    }
+    .nav-none{
+        display: none;
+    }
+    .container{
+        width: 80vw;
+    }
+    .menu{
+        width: 100vw;
+    }
+}
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 577px) {
+    .audio-responsive{
+        width: 90%;
+    }
+    .audio-container{
+        width: 100%;
+    }
+}
+/* // Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+    .img-profil{
+        margin-bottom: 40px;
+    }
+}
+/* //(970px and up) */
+@media (min-width: 970px) {
+    .audio-responsive{
+        width: 45%;
+    }
+}
+/* // Large devices (desktops, 992px and up) */
+@media (max-width: 992px) {
+    /* .res-thead{
+        display: none;
+    } */
+    .res-tr{
+        display: block;
+    }
+    .res-th{
+        float: left;
+    }
+}
+/* //(1500px and up) */
+@media (min-width: 1500px) {
+    .audio-responsive{
+        width: 27%;
+    }
+    .audio-container{
+        width: auto;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* // X-Small devices (portrait phones, less than 576px) */
+/* // No media query for `xs` since this is the default in Bootstrap */
+
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {}
+
+/* // Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {}
+
+
+/* // X-Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {}
+
+/* // XX-Large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">Déconnexion</h1>
+    <p class="d-flex justify-content-center mt-5 fw-bold">Vous êtes maintenant déconnecté</p>
+{% endblock %}
+{% block javascripts %}
+<script>
+window.setTimeout("location=('/home');",4000);
+</script>
+{% endblock %}

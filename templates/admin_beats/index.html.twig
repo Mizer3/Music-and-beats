@@ -1,0 +1,100 @@
+{% extends 'base-admin.html.twig' %}
+
+{% block title %}Beats{% endblock %}
+
+{% block body %}
+    <h1>Beats</h1>
+
+    <a href="{{ path('app_admin_beats_new') }}" class="btn btn-success mt-2">Nouveau</a>
+
+    <table class="table">
+        <thead>
+            <tr class="text-center">
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Image</th>
+                <th class="description-beats">Description</th>
+                <th>Beats</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for beat in beats %}
+            <tr class="table-height">
+                <td>{{ beat.id }}</td>
+                <td>{{ beat.name }}</td>
+                <td>{{ beat.price }}€</td>
+                <td><img src="{{asset('uploads/images/' ~ beat.imageName)}}" alt="{{ beat.imageName }}" class="img-audio"></td>
+                <td class="description-beats">{{ beat.description }}</td>
+                <td>
+                    <div class="audio-container">
+                        <div class="audio-info btn-style">
+                            <h4 id="title">{{beat.name}}</h4>
+                            <div class="progress-container">
+                                <div class="progress"></div>
+                            </div>
+                        </div>
+                        <audio src="{{asset('uploads/beats/' ~ beat.beatName)}}" class="song" data-playing="false"></audio>
+                        <div class="img-container">
+                            <img src="{{asset('uploads/images/' ~ beat.imageName)}}" alt="music-cover" class="img-cover">
+                        </div>
+                        <div class="navigation">
+                            <button class="action-btn">
+                                <i class="fas fa-backward"></i>
+                            </button>
+                            <button class="action-btn action-btn-big bt-play">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+                <td class="d-flex flex-row align-items-center table-height">
+                    {# <a href="{{ path('app_admin_beats_show', {'id': beat.id}) }}">show</a> #}
+                    <a href="{{ path('app_admin_beats_edit', {'id': beat.id}) }}" class="ms-2 me-4"><i class="fa-solid fa-pen"></i></a>
+
+                    {{ include('admin_beats/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Pas de BEATS</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}
+{% block javascripts %}
+<script>
+var currentPlayer = null;
+
+$(".bt-play").on("click", function(){
+    var player = $(this).parent().parent().find(".song");
+    var play = $(this).parent().parent();
+
+    if($(player).attr("data-playing")=="false"){
+        //console.log(currentPlayer);
+        //if($(player)!= $(currentPlayer)){
+            $(".song").each(function(){
+                $(this).trigger("pause");
+                $(this).attr("data-playing", "false");
+                $(this)[0].currentTime = 0;
+            });
+        //}
+        
+        $(play).addClass("play");
+        $(this).find("i").removeClass('fa-play');
+        $(this).find("i").addClass('fa-pause');
+        currentPlayer = $(player);
+        $(player).attr("data-playing", "true");
+        $(player).trigger("play");
+    }else{
+        $(player).attr("data-playing", "false");
+        $(player).trigger("pause");
+        $(play).removeClass("play");
+        $(this).find("i").addClass('fa-play');
+        $(this).find("i").removeClass('fa-pause');
+    }
+});
+{% endblock %}

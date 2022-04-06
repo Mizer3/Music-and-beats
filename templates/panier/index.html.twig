@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panier
+{% endblock %}
+
+{% block body %}
+
+	<h1>Panier</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th class="p-3 panier text-center">Beats</th>
+				<th class="p-3 panier text-center">Nom Produit</th>
+				<th class="p-3 panier text-center">Prix</th>
+			</tr>
+		</thead>
+		<tbody>
+			{# {% for key, commande in commandes %} #}
+
+				{# Commande n°{{key+1}}  #}
+				{# {% for orderBeat in commandes.orderBeats %} #}
+				
+					{% for beats in orderBeats.beats %}
+					<tr class="panier" data-id="{{beats.id}}">
+						<td class="p-3 panier">
+							<div class="audio-container">
+								<div class="audio-info btn-style">
+									<h4 id="title">{{beats.name}}</h4>
+									<div class="progress-container">
+										<div class="progress"></div>
+									</div>
+								</div>
+								<audio src="{{asset('uploads/beats/' ~ beats.beatName)}}" class="song" data-playing="false"></audio>
+								<div class="img-container">
+									<a href="{{path('instrumental-info', {id: beats.id})}}"><img src="{{asset('uploads/images/' ~ beats.imageName)}}" alt="music-cover" class="img-cover"></a>
+								</div>
+								<div class="navigation">
+									<button class="action-btn">
+										<i class="fas fa-backward"></i>
+									</button>
+									<button class="action-btn action-btn-big bt-play">
+										<i class="fas fa-play"></i>
+									</button>
+								</div>
+							</div>
+						</td>
+						<td class="p-3 panier text-center align-self-center fw-bold">{{beats.name}}</td>
+						<td class="p-3 panier text-center fw-bold">{{beats.price}}€</td>
+						<td class="p-3 panier text-center">
+							<i class="fa-solid fa-xmark delete" data-id="{{beats.id}}"  data-orderid="{{orderBeats.id}}"></i>
+						</td>
+					</tr>
+					{# {% endfor %} #}
+
+					{% else %}
+						<tr class="panier">
+							<td colspan="3" class="p-3 panier fw-bold text-center">Votre panier est vide</td>
+						</tr>
+				{% endfor %}
+				{% if orderBeats.totalPrice is not null %}
+					<tr>
+					<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
+					<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
+					</tr>
+				{% elseif orderBeats.totalPrice == null %}
+					<tr>
+					<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
+					<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
+					</tr>
+				{% endif %}
+		</tbody>
+	</table>
+	{% if orderBeats is not null and orderBeats|length > 0 %}
+		<div class="d-flex justify-content-center">
+			<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 me-3 fw-bold">Continuer vos achats</button></a>
+			<button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 ms-3 fw-bold" id="checkout-button">Valider</button>
+		</div>
+	{% else %}
+		<div class="d-flex justify-content-center">
+			<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 fw-bold">Continuer vos achats</button></a>
+		</div>
+	{% endif %}
+{% endblock %}
+{% block javascripts %}
+	<script>
+		var currentPlayer = null;
+
+$(".bt-play").on("click", function () {
+var player = $(this).parent().parent().find(".song");
+var play = $(this).parent().parent();
+
+if ($(player).attr("data-playing") == "false") {
+// console.log(currentPlayer);
+// if($(player)!= $(currentPlayer)){
+$(".song").each(function () {
+$(this).trigger("pause");
+$(this).attr("data-playing", "false");
+$(this)[0].currentTime = 0;
+});
+// }
+
+$(play).addClass("play");
+$(this).find("i").removeClass('fa-play');
+$(this).find("i").addClass('fa-pause');
+currentPlayer = $(player);
+$(player).attr("data-playing", "true");
+$(player).trigger("play");
+} else {
+$(player).attr("data-playing", "false");
+$(player).trigger("pause");
+$(play).removeClass("play");
+$(this).find("i").addClass('fa-play');
+$(this).find("i").removeClass('fa-pause');
+}
+});
+{# function updateProgress(e) {
+var {
+duration,
+currentTime
+} = event.target;
+var progressPercent = (currentTime / duration) * 100;
+progress.style.width = `${progressPercent}%`;
+}
+#}
+var basket = $('.delete');
+basket.each(function () {
+	$(this).click(function () {
+		var dataId = $(this).attr('data-id');
+		var dataOrderId = $(this).attr('data-orderid');
+		let url = "{{ path('suppPanier', {'beats' : 'dataId', 'orderBeats' : 'dataOrderId'}) }}"
+		url = url.replace('dataId', dataId)
+		url = url.replace('dataOrderId', dataOrderId)
+
+		$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: url,
+
+		}).done(function (response) {
+			console.log(response.id);
+			$("tr").each(function () {
+				console.log($(this).data("id"));
+				if ($(this).data("id") == response.id)
+					$(this).css("display", "none");
+			});
+		});
+	});
+});
+	</script>
+	{# <script type="text/javascript">
+        var stripe = Stripe('pk_test_51K9809Jjsl5lsnokxBy2erATCIb0fTXZkU2cF82vEFOifvjAqliaBcsst2vbUmd0SWm0BXNtbQjUXi7WsEVyWfyg00geEUu2BV');
+        var checkoutButton = document.getElementById("checkout-button");
+		var id = "{{id}}";
+        checkoutButton.addEventListener("click", function () {
+			if(id!=null){
+				console.log(id)
+            fetch("/panier/create-session/" + id, {
+                method: "POST",
+            })
+            .then(function (response) {
+                return response.json();
+				console.log(json())
+            })
+			
+            .then(function (session) {
+                if(session.error == 'panier') {
+                    window.location.replace("{{ path('panier') }}")
+                } else {
+                    return stripe.redirectToCheckout({ sessionId: session.id});
+                }
+            })
+            .then(function (result) {
+				// If redirectToCheckout fails due to a browser or network
+                // error, you should display the localized error message to your
+                // customer using error.message.																																 
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error:", error)
+            })};
+        });
+    </script> #}
+{% endblock %}

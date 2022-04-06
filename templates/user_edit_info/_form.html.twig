@@ -1,0 +1,6 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="d-flex justify-content-center fw-bold">
+        <button class="btn-style p-2 mt-3 mb-3">{{ button_label|default('Save') }}</button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mot de passe
+{% endblock %}
+
+{% block body %}
+	{% for flashError in app.flashes('reset_password_error') %}
+		<div class="alert alert-danger" role="alert">{{ flashError }}</div>
+	{% endfor %}
+	<h1>Modifier mot de passe</h1>
+
+	{{ form_start(requestForm) }}
+	<div class="d-flex flex-column align-items-center">
+		<div class="w-75">
+			<div class="d-flex mt-2 mb-3 text-center">
+				<h3>
+					Veuillez rentrer votre Email et nous vous enverrons un mail afin de changer votre mot de passe.
+				</h3>
+			</div>
+
+			<div class="text-center fw-bold">
+				{{ form_label(requestForm.email) }}
+			</div>
+			{{ form_widget(requestForm.email) }}
+
+			<div class="d-flex justify-content-center">
+				<button class="btn-style p-2 mt-4">Envoyer</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(requestForm) }}
+{% endblock %}

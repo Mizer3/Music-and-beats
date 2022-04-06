@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mail de confirmation{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">Mail de confirmation</h1>
+    <div class="d-flex justify-content-center">
+        <p class="col-md-9 mt-5 fw-bold text-center">Un mail de confirmation vient de vous être envoyé. Cliquez sur le lien à l'intérieur du mail afin de valider la création de votre compte. Attention, ce lien est valable seulement 1H.</p>
+    </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+window.setTimeout("location=('/home');",5000);
+</script>
+{% endblock %}

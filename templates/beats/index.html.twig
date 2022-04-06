@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Instrumental{% endblock %}
+
+{% block body %}
+<h1>Beats</h1>
+    <nav class="navbar navbar-expand navbar-light btn-style">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mb-2 mb-lg-0 d-flex flex-wrap fw-bold">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{path('instrumental')}}">Tous</a>
+            </li>
+            {% if category is not null and category|length > 0 %}
+            {% for categorie in category %}
+            <li class="nav-item">
+                <a class="nav-link active" href="{{path('category', {'id': categorie.id} )}}">{{categorie.name}}</a>
+            </li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+        </div>
+    </div>
+    </nav>
+    <div class="row d-flex flex-wrap justify-content-around">
+        {% if beats|length > 0 %}
+        {% for beat in beats %}
+                <div class="d-flex flex-wrap justify-content-center flex-column align-items-center audio-responsive">
+                        <div class="audio-container">
+                            <div class="audio-info btn-style">
+                                <h4 id="title">{{beat.name}}</h4>
+                                <div class="progress-container">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+                            <audio src="{{asset('uploads/beats/' ~ beat.beatName)}}" class="song" data-playing="false"></audio>
+                            <div class="img-container">
+                                <a href="{{path('instrumental-info', {id: beat.id})}}"><img src="{{asset('uploads/images/' ~ beat.imageName)}}" alt="music-cover" class="img-cover"></a>
+                            </div>
+                            <div class="navigation">
+                                <button class="action-btn">
+                                    <i class="fas fa-backward"></i>
+                                </button>
+                                <button class="action-btn action-btn-big bt-play">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-around mb-3">
+                            <h3 class="me-5">{{beat.price ~ '€'}}</h3>
+                            <a href="{{path('userView', {id: beat.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beat.user}}" class="img-basket black"></a>
+                            {% if app.user %}
+                                {% if beat in panier.beats %}
+                                    <p class="text-center">Déja dans le panier</p>
+                                {% else %}
+                                    <img src="{{asset('images/shopping-basket.png')}}" alt="Ajouter au panier" class="cart img-basket ms-5" data-id="{{beat.id}}">
+                                {% endif %}
+                            {% else %}
+                                <img src="{{asset('images/shopping-basket.png')}}" alt="Ajouter au panier" class="cart img-basket ms-5" data-id="{{beat.id}}">
+                            {% endif %}
+                        </div>
+                    
+                </div>
+                {# {% endfor %} #}
+            {% endfor %}
+            {% else %}
+            <p class="fw-bold text-center mt-4">No BEATS</p>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascripts %}
+<script>
+var currentPlayer = null;
+
+$(".bt-play").on("click", function(){
+    var player = $(this).parent().parent().find(".song");
+    var play = $(this).parent().parent();
+
+    if($(player).attr("data-playing")=="false"){
+        //console.log(currentPlayer);
+        //if($(player)!= $(currentPlayer)){
+            $(".song").each(function(){
+                $(this).trigger("pause");
+                $(this).attr("data-playing", "false");
+                $(this)[0].currentTime = 0;
+            });
+        //}
+        
+        $(play).addClass("play");
+        $(this).find("i").removeClass('fa-play');
+        $(this).find("i").addClass('fa-pause');
+        currentPlayer = $(player);
+        $(player).attr("data-playing", "true");
+        $(player).trigger("play");
+    }else{
+        $(player).attr("data-playing", "false");
+        $(player).trigger("pause");
+        $(play).removeClass("play");
+        $(this).find("i").addClass('fa-play');
+        $(this).find("i").removeClass('fa-pause');
+    }
+});
+{# function updateProgress(e){
+    var {duration, currentTime} = event.target;
+    var progressPercent = (currentTime / duration) * 100;
+    progress.style.width = `${progressPercent}%` ;
+} #}
+var basket = $('.cart');
+basket.each(function(){
+    $(this).click(function() {
+    var dataId = $(this).attr('data-id');
+        $.ajax({
+                type: "POST",
+                dataType:"json",
+                url: "{{ path('ajoutPanier') }}" ,
+                data: {"id":dataId},
+                
+        }).done(function(response){
+            console.log(response)
+        $("img").each(function(){
+            if($(this).data("id")==response){
+                console.log(response);
+                $(this).addClass("d-none");
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
+
+{# https://www.solodev.com/blog/web-design/how-to-show-the-total-number-of-items-in-customer-shopping-carts.stml #}

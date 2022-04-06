@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mot de passe
+{% endblock %}
+
+{% block body %}
+	<h1>Modifier votre mot de passe</h1>
+
+	{{ form_start(resetForm) }}
+	<div class="d-flex flex-column align-items-center">
+		<div class="w-75">
+			<div class="d-flex mt-2 mb-3">
+				<p class="fw-bold text-center mt-4">
+					Veuillez rentrer votre Email et nous vous enverrons un mail afin de changer votre mot de passe.
+				</p>
+			</div>
+
+			<div class="text-center fw-bold">
+				{{ form_label(resetForm.plainPassword) }}
+			</div>
+			{{ form_widget(resetForm.plainPassword) }}
+			<div class="d-flex justify-content-center">
+				<button class="btn-style p-2 mt-4 fw-bold">Envoyer</button>
+			</div>
+		</div>
+	</div>
+	{{ form_end(resetForm) }}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier vos informations personnelles{% endblock %}
+
+{% block body %}
+
+    <button class="btn-style p-2 mb-3 mt-3 lien fw-bold"><a href="{{ path('info') }}">Retour</a></button>
+
+    <h1>Modifier vos informations personnelles</h1>
+    
+    {{ include('user_edit_info/_form.html.twig', {'button_label': 'Modifier'}) }}
+    
+{% endblock %}

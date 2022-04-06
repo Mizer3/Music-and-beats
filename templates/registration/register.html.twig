@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block body %}
+    {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+
+    <h1>Créer un compte</h1>
+    
+    {{ form_start(registrationForm) }}
+    <div class="d-flex flex-column align-items-center">
+        <div class="w-75">
+            <div class="text-center">
+                {{ form_label(registrationForm.email) }}
+            </div>
+            {{ form_widget(registrationForm.email) }}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.plainPassword)  }}
+            </div>
+            {{ form_widget(registrationForm.plainPassword)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.nom)  }}
+            </div>
+            {{ form_widget(registrationForm.nom)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.prenom)  }}
+            </div>
+            {{ form_widget(registrationForm.prenom)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.pseudo)  }}
+            </div>
+            {{ form_widget(registrationForm.pseudo)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.adresse)  }}
+            </div>
+            {{ form_widget(registrationForm.adresse)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.codePostal)  }}
+            </div>
+            {{ form_widget(registrationForm.codePostal)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.imageName)  }}
+            </div>
+            {{ form_widget(registrationForm.imageName)}}
+            <div class="text-center mt-2">
+                {{ form_label(registrationForm.Roles)  }}
+            </div>
+            {{ form_widget(registrationForm.Roles)}}
+            <div class=" d-flex justify-content-center mt-3">
+                {{ form_row(registrationForm.agreeTerms) }}
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-style mb-5 mt-2">Créer</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(registrationForm) }}
+{% endblock %}
