@@ -6,10 +6,10 @@ use App\Entity\Beats;
 use App\Entity\Statut;
 use App\Entity\Category;
 use App\Entity\Commande;
-use App\Entity\User;
+use App\Entity\OrderBeats;
+use App\Repository\UserRepository;
 use App\Repository\BeatsRepository;
 use App\Repository\CategoryRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,60 +24,98 @@ class BeatsController extends AbstractController
     }
 
     #[Route('/instrumental', name: 'instrumental')]
-    public function index(BeatsRepository $beatsRepository, CategoryRepository $categoryRepository, Request $request, UserRepository $userRepository): Response
+    public function index(BeatsRepository $beatsRepository, CategoryRepository $categoryRepository, Request $request): Response
     {
-        if ($request->query->get('search')){
-            $beats = $beatsRepository->findSearch($request->query->get('search'));
+        if($this->getUser()){
+            if ($request->query->get('search')){
+                $beats = $beatsRepository->findSearch($request->query->get('search'));
+            }else{
+                $beats = $beatsRepository->findAll();
+            };
+            $category = $categoryRepository->findAll();
+            $statut_attente = $this->entityManager->getRepository(Statut::class)->findOneByName('En attente');
+            $commande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente])?$this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente]):new Commande();
+            if($commande->getOrderBeats() == null){
+                $orderBeats = new OrderBeats();
+            }else{  
+                $orderBeats = $commande->getOrderBeats();
+            }
+            return $this->render('beats/index.html.twig', [
+                'beats' => $beats,
+                'panier' => $orderBeats,
+                'category' => $category,
+            ]);
         }else{
-            $beats = $beatsRepository->findAll();
-        };
-        // $beatmakers = $userRepository->findInRoles("ROLE_BEATMAKER");
-        $category = $categoryRepository->findAll();
-        $statut_attente = $this->entityManager->getRepository(Statut::class)->findOneByName('En attente');
-        $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=> $statut_attente,]);
-        $orderBeats = $currentCommande->getOrderBeats();
-        return $this->render('beats/index.html.twig', [
-            'beats' => $beats,
-            'panier' => $orderBeats,
-            'category' => $category,
-            // 'beatmakers' => $beatmakers
-        ]);
+            if ($request->query->get('search')){
+                $beats = $beatsRepository->findSearch($request->query->get('search'));
+            }else{
+                $beats = $beatsRepository->findAll();
+            };
+            $category = $categoryRepository->findAll();
+            return $this->render('beats/index.html.twig', [
+                'beats' => $beats,
+                'category' => $category,
+            ]);
+        }
     }
 
 
     #[Route('/instrumental/category/{id}', name: 'category')]
-    public function category($id,CategoryRepository $categoryRepository, UserRepository $userRepository)
+    public function category($id,CategoryRepository $categoryRepository)
     {
-        $category = $categoryRepository->findAll();
-        $beats = $this->entityManager->getRepository(Category::class)->find($id)->getBeats();
-        $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=> 2,]);
-        $orderBeats = $currentCommande->getOrderBeats();
-        // $beatmakers = $userRepository->findInRoles("ROLE_BEATMAKER");
-        // foreach ($beatmakers as $beatmaker) {
-        //     $beats[$beatmaker->getId()] = $beatmaker->getBeats();
-        // };
-        //dd($beats->toArray());
-        
-        return $this->render('beats/index.html.twig', [
-            'beats' => $beats,
-            'category' => $category,
-            'panier' => $orderBeats,
-            // 'beatmakers' => $beatmakers
-        ]);
+        if($this->getUser()){
+            $category = $categoryRepository->findAll();
+            $beats = $this->entityManager->getRepository(Category::class)->find($id)->getBeats();
+            $statut_attente = $this->entityManager->getRepository(Statut::class)->findOneByName('En attente');
+            $commande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente])?$this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente]):new Commande();
+            if($commande->getOrderBeats() == null){
+                $orderBeats = new OrderBeats();
+            }else{
+                $orderBeats = $commande->getOrderBeats();
+            }
+
+            return $this->render('beats/index.html.twig', [
+                'beats' => $beats,
+                'category' => $category,
+                'panier' => $orderBeats,
+            ]);
+        }else{
+            $category = $categoryRepository->findAll();
+            $beats = $this->entityManager->getRepository(Category::class)->find($id)->getBeats();
+
+            return $this->render('beats/index.html.twig', [
+                'beats' => $beats,
+                'category' => $category,
+            ]);
+        }
     }
     #[Route('/instrumental/detail/{id}', name: 'instrumental-info')]
     public function detail($id)
     {
-        $beats = $this->entityManager->getRepository(Beats::class)->find($id);
-        $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=> 2,]);
-        $orderBeats = $currentCommande->getOrderBeats();
-        $category = $beats->getCategory();
+        if($this->getUser()){
+            $beats = $this->entityManager->getRepository(Beats::class)->find($id);
+            $statut_attente = $this->entityManager->getRepository(Statut::class)->findOneByName('En attente');
+            $commande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente])?$this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente]):new Commande();
+            if($commande->getOrderBeats() == null){
+                $orderBeats = new OrderBeats();
+            }else{
+                $orderBeats = $commande->getOrderBeats();
+            }
+            $category = $beats->getCategory();
 
-        return $this->render('beats/details.html.twig', [
-            'beats' => $beats,
-            'panier' => $orderBeats,
-            'categorie' => $category,
-            // 'beatmakers' => $beatmakers
-        ]);
+            return $this->render('beats/details.html.twig', [
+                'beats' => $beats,
+                'panier' => $orderBeats,
+                'categorie' => $category,
+            ]);
+        }else{
+            $beats = $this->entityManager->getRepository(Beats::class)->find($id);
+            $category = $beats->getCategory();
+
+            return $this->render('beats/details.html.twig', [
+                'beats' => $beats,
+                'categorie' => $category,
+            ]);
+        }
     }
 }

@@ -3,7 +3,7 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-	{% if user is not defined %}{# MOI #}
+	{% if user is not defined %}{# JE SUIS USER #}
 		<div class="justify-content-center d-flex">
 					<h1>
 						{% set hasPseudo = false %}
@@ -33,7 +33,8 @@
 							<a href="{{path('info')}}" class="mb-2 fw-bold">Informations personnelles</a>
 							<a href="" class="fw-bold">Historique des Comandes</a>
 							{% if 'ROLE_BEATMAKER' in app.user.roles %}{# JE SUIS BEATMAKER #}
-								<a href="{{path('app_user_beats_index')}}" class="fw-bold mt-3">Mes Beats</a>
+								<a href="" class="fw-bold mt-2">Historique des ventes</a>
+								<a href="{{path('app_user_beats_index')}}" class="fw-bold mt-2">Mes Beats</a>
 							{% endif %}
 						</div>
 					</div>
@@ -69,44 +70,5 @@
 				</div>
 			</div>
 		</div>
-		{% endif %}
-	{% endblock %}
-{% block javascripts %}
-<script>
-var currentPlayer = null;
-
-$(".bt-play").on("click", function(){
-    var player = $(this).parent().parent().find(".song");
-    var play = $(this).parent().parent();
-
-    if($(player).attr("data-playing")=="false"){
-        //console.log(currentPlayer);
-        //if($(player)!= $(currentPlayer)){
-            $(".song").each(function(){
-                $(this).trigger("pause");
-                $(this).attr("data-playing", "false");
-                $(this)[0].currentTime = 0;
-            });
-        //}
-        
-        $(play).addClass("play");
-        $(this).find("i").removeClass('fa-play');
-        $(this).find("i").addClass('fa-pause');
-        currentPlayer = $(player);
-        $(player).attr("data-playing", "true");
-        $(player).trigger("play");
-    }else{
-        $(player).attr("data-playing", "false");
-        $(player).trigger("pause");
-        $(play).removeClass("play");
-        $(this).find("i").addClass('fa-play');
-        $(this).find("i").removeClass('fa-pause');
-    }
-});
-function updateProgress(e){
-    var {duration, currentTime} = event.target;
-    var progressPercent = (currentTime / duration) * 100;
-    progress.style.width = `${progressPercent}%` ;
-}
-</script>
+	{% endif %}
 {% endblock %}

@@ -14,6 +14,17 @@ $(voile).on("click", function(){
     $(menu).removeClass("active");
 });
 
+// var currentPlayer = null;
+// var progress = $('.progress');
+
+// $(".bt-play").on("click", function(){
+//     var player = $(this).parent().parent().find(".song");
+//     var play = $(this).parent().parent();
+
+
+
+
+// }
 
 // const musicContainer = document.getElementById('audio-container');
 // const playBtn = document.getElementById('play');

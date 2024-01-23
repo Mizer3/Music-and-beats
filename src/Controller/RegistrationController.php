@@ -37,7 +37,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $imageFile = $form->get('imageName')->getData();
             if ($imageFile){
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -78,23 +77,10 @@ class RegistrationController extends AbstractController
             return $this->render('mail/mail_send.html.twig', [
                 'controller_name' => 'RedirectController',
             ]);
-            // return $userAuthenticator->authenticateUser(
-            //     $user,
-            //     $authenticator,
-            //     $request,
-            // );
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-        ]);
-    }
-
-    #[Route('/verify/email-confirmation', name: 'app_email_send')]
-    public function emailValidation():Response
-    {
-        return $this->render('mail/mail_send.html.twig', [
-            'controller_name' => 'RedirectController',
         ]);
     }
 

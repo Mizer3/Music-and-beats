@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Beats;
+use App\Entity\Statut;
 use App\Entity\Commande;
+use App\Entity\OrderBeats;
 use App\Form\UserInfoType;
 use App\Form\BeatsUserType;
 use App\Repository\UserRepository;
@@ -100,13 +102,28 @@ class UserController extends AbstractController
     #[Route('/user/show/{id}', name: 'app_user_beats_index_view', methods: ['GET'])]
     public function viewBeats($id, BeatsRepository $beatsRepository, UserRepository $userRepository): Response
     {
-        $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=> 2,]);
-        $orderBeats = $currentCommande->getOrderBeats();
-        return $this->render('list_beats/index.html.twig', [
+        if($this->getUser()){
+            $statut_attente = $this->entityManager->getRepository(Statut::class)->findOneByName('En attente');
+            $commande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente])?$this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=>$statut_attente]):new Commande();
+            if($commande->getOrderBeats() == null){
+                $orderBeats = new OrderBeats();
+            }else{
+                $orderBeats = $commande->getOrderBeats();
+            }
+
+            return $this->render('list_beats/index.html.twig', [
+                'beats' => $beatsRepository->findByUser($id),
+                'user' => $userRepository->find($id),
+                'panier' => $orderBeats,
+            ]);
+        }else{
+            
+            return $this->render('list_beats/index.html.twig', [
             'beats' => $beatsRepository->findByUser($id),
             'user' => $userRepository->find($id),
-            'panier' => $orderBeats,
         ]);
+        }
+        
     }
     
     #[Route('/user/new', name: 'app_user_beats_new', methods: ['GET', 'POST'])]

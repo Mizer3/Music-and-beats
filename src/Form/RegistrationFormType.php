@@ -82,9 +82,9 @@ class RegistrationFormType extends AbstractType
                     'expanded' => false,
                     'choices'  => [
                         'Artiste' => 'ROLE_USER',
-                        'Beatmaker' => 'ROLE_BEATMAKER','ROLE_USER'
+                        'Beatmaker' => 'ROLE_BEATMAKER'
                     ],
-            ]);
+                ]);
             $builder->get('Roles')
                     ->addModelTransformer(new CallbackTransformer(
                         function ($rolesArray) {

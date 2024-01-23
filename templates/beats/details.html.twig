@@ -10,9 +10,9 @@
                         <div class="audio-container">
                             <div class="audio-info btn-style">
                                 <h4 id="title">{{beats.name}}</h4>
-                                <div class="progress-container">
+                                {# <div class="progress-container">
                                     <div class="progress"></div>
-                                </div>
+                                </div> #}
                             </div>
                             <audio src="{{asset('uploads/beats/' ~ beats.beatName)}}" class="song" data-playing="false"></audio>
                             <div class="img-container">
@@ -32,7 +32,7 @@
 					    </div>
                         <div class="d-flex justify-content-around mb-3">
                             <h3 class="me-5">{{beats.price ~ '€'}}</h3>
-                            <a href="{{path('userView', {id: beats.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beats.user}}" class="img-basket black"></a>
+                            <a href="{{path('userView', {id: beats.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beats.user}}" class="img-basket"></a>
                             {% if app.user %}
                                 {% if beats in panier.beats %}
                                     <p class="text-center">Déja dans le panier</p>

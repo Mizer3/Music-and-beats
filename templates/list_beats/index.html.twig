@@ -5,22 +5,27 @@
 {% block body %}
     <div class="lien">
         {% if app.user and app.user == user %}   
-	        <a href="{{path('user')}}"><i class="fa-solid fa-backward mb-3 mt-2"></i></a>
+            <a href="{{path('user')}}"><i class="fa-solid fa-backward mb-3 mt-2"></i></a>
         {% else %}
             <a href="{{path('userView', {id: user.id })}}"><i class="fa-solid fa-backward mb-3 mt-2"></i></a>
         {% endif %}
-        </div>
+    </div>
     <h1 class="text-center mt-2">Beats</h1>
-        {% if beats is not null and beats|length > 0 %}
-			{% for beat in beats %}
+    <div class="d-flex justify-content-center">
+        {% if app.user and app.user == user %}   
+            <button class="btn-style p-2 lien mt-3 mb-3 fw-bold"><a href="{{ path('app_user_beats_new') }}">Ajouter un Beat</a></button>
+        {% endif %}   
+    </div>
+    {% if beats is not null and beats|length > 0 %}
+		{% for beat in beats %}
 			<div class="d-flex flex-wrap align-items-center">
 				<div class="col-12 col-lg-6">
 					<div class="audio-container">
 						<div class="audio-info btn-style">
 							<h4 id="title">{{beat.name}}</h4>
-							<div class="progress-container">
+							{# <div class="progress-container">
 								<div class="progress"></div>
-							</div>
+							</div> #}
 						</div>
 						<audio src="{{asset('uploads/beats/' ~ beat.beatName)}}" class="song" data-playing="false"></audio>
 						<div class="img-container">
@@ -35,15 +40,18 @@
 							</button>
 						</div>
 					</div>
-
-					<div class="d-flex justify-content-center mb-3 align-items-center info-perso">
+					<div class="d-flex justify-content-around mb-3 align-items-center info-perso">
 						<h3 class="me-3">{{beat.price ~ '€'}}</h3>
                         {% if app.user and app.user != user %}
+                            <a href="{{path('userView', {id: beat.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beat.user}}" class="img-basket"></a>
                             {% if beat in panier.beats %}
                                 <p class="text-center">Déja dans le panier</p>
                             {% else %}
                                 <img src="{{asset('images/shopping-basket.png')}}" alt="Ajouter au panier" class="cart img-basket ms-5" data-id="{{beat.id}}">
                             {% endif %}
+                        {% else %}
+                        <a href="{{path('userView', {id: beat.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beat.user}}" class="img-basket"></a>
+                        <img src="{{asset('images/shopping-basket.png')}}" alt="Ajouter au panier" class="cart img-basket ms-5" data-id="{{beat.id}}">
                         {% endif %}
 					</div>
 				</div>
@@ -59,19 +67,12 @@
                         <button class="btn-style p-2 lien fw-bold"><a href="{{ path('app_user_beats_edit', {'id': beat.id}) }}">Modifier</a></button>
                     {% endif %}   
                 </div>
-			{% endfor %}
-		
-        {% else %}
-            <div>
-                <p class="text-center fw-bold mt-4">Vous n'avez pas encore de Beats en vente</p>
-            </div>
-            
-        {% endif %}
-        <div class="d-flex justify-content-center">
-            {% if app.user and app.user == user %}   
-                <button class="btn-style p-2 lien mt-3 mb-3 fw-bold"><a href="{{ path('app_user_beats_new') }}">Ajouter un Beat</a></button>
-            {% endif %}   
+		{% endfor %}
+    {% else %}
+        <div>
+            <p class="text-center fw-bold mt-4">Vous n'avez pas encore de Beats en vente</p>
         </div>
+    {% endif %}
 {% endblock %}
 {% block javascripts %}
 <script>

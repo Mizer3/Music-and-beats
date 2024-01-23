@@ -8,7 +8,7 @@
         <h2>Pour les passionées de HIP-HOP</h2>
     </div>
     <div class="main ">
-        <h5 class="text-center mt-2">Beatmaker du moment</h5>
+        <h2 class="text-center mt-2 border-beatmaker">Beatmaker du moment</h2>
         <div class="border-beatmaker p-2">
             {% if beatmakers is not null and beatmakers|length > 0 %}
                 <div class="row d-flex flex-wrap">
@@ -29,7 +29,7 @@
                 </div>
             {% endif %}
         </div>
-        <h5 class="text-center mt-2">Beats du moment</h5>
+        <h2 class="text-center mt-2 border-beatmaker">Beats du moment</h2>
         <div class="row d-flex flex-wrap justify-content-around">
         {% if beats|length > 0 %}
         {% for beat in beats %}
@@ -37,13 +37,13 @@
                         <div class="audio-container">
                             <div class="audio-info btn-style">
                                 <h4 id="title">{{beat.name}}</h4>
-                                <div class="progress-container">
+                                {# <div class="progress-container">
                                     <div class="progress"></div>
-                                </div>
+                                </div> #}
                             </div>
                             <audio src="{{asset('uploads/beats/' ~ beat.beatName)}}" class="song" data-playing="false"></audio>
                             <div class="img-container">
-                                <img src="{{asset('uploads/images/' ~ beat.imageName)}}" alt="music-cover" class="img-cover">
+                                <a href="{{path('instrumental-info', {id: beat.id})}}"><img src="{{asset('uploads/images/' ~ beat.imageName)}}" alt="music-cover" class="img-cover"></a>
                             </div>
                             <div class="navigation">
                                 <button class="action-btn">
@@ -56,7 +56,7 @@
                         </div>
                         <div class="d-flex justify-content-around mb-3">
                             <h3 class="me-5">{{beat.price ~ '€'}}</h3>
-                            <a href="{{path('userView', {id: beat.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beat.user}}" class="img-basket black"></a>
+                            <a href="{{path('userView', {id: beat.user.id})}}"><img src="{{asset('images/artiste2.ico')}}" alt="prod by {{beat.user}}" class="img-basket"></a>
                             {% if app.user %}
                                 {% if beat in panier.beats %}
                                     <p class="text-center">Déja dans le panier</p>

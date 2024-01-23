@@ -86,7 +86,11 @@ class UserType extends AbstractType
                 ]),
             ],
         ])
-        ->add('isVIP', CheckboxType::class, ['label' => 'Mettre en avant'])
+        ->add('isVIP', ChoiceType::class, ['label' => 'Mettre en avant',
+            'choices' => [
+                'Mettre en avant' => true,
+                'Ne pas mettre en avant' => false
+            ]])
         ;
         $builder->get('roles')
                     ->addModelTransformer(new CallbackTransformer(

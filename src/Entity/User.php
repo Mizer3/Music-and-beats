@@ -61,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $home;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVIP;
+    private $isVIP = false;
 
     public function __construct()
     {

@@ -9,7 +9,7 @@
         {% for beatmaker in beatmakers %}
 
         <div class="col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center align-items-center flex-column lien size p-1">
-            <img src="{{asset('uploads/images/' ~ beatmaker.imageName)}}" alt="" class="img-profil mt-2">
+            <a href="{{path('userView', {id: beatmaker.id})}}" class="mt-2 fw-bold"><img src="{{asset('uploads/images/' ~ beatmaker.imageName)}}" alt="" class="img-profil mt-2"></a>
             <a href="{{path('userView', {id: beatmaker.id})}}" class="mt-2 fw-bold">
                 {% set hasPseudo = false %}
 				{% if beatmaker.pseudo is not null %}

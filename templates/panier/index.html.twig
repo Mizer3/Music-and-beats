@@ -1,85 +1,80 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Panier
-{% endblock %}
+{% block title %}Panier{% endblock %}
 
 {% block body %}
-
 	<h1>Panier</h1>
-	<table class="table">
-		<thead>
-			<tr>
-				<th class="p-3 panier text-center">Beats</th>
-				<th class="p-3 panier text-center">Nom Produit</th>
-				<th class="p-3 panier text-center">Prix</th>
-			</tr>
-		</thead>
-		<tbody>
-			{# {% for key, commande in commandes %} #}
-
-				{# Commande n°{{key+1}}  #}
-				{# {% for orderBeat in commandes.orderBeats %} #}
-				
-					{% for beats in orderBeats.beats %}
-					<tr class="panier" data-id="{{beats.id}}">
-						<td class="p-3 panier">
-							<div class="audio-container">
-								<div class="audio-info btn-style">
-									<h4 id="title">{{beats.name}}</h4>
-									<div class="progress-container">
-										<div class="progress"></div>
+		{% if app.user %}{# MOI #}
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="p-3 panier text-center">Beats</th>
+						<th class="p-3 panier text-center">Nom Produit</th>
+						<th class="p-3 panier text-center">Prix</th>
+					</tr>
+				</thead>
+				<tbody>
+						{% for beats in orderBeats.beats %}
+							<tr class="panier" data-id="{{beats.id}}">
+								<td class="p-3 panier">
+									<div class="audio-container">
+										<div class="audio-info btn-style">
+											<h4 id="title">{{beats.name}}</h4>
+											{# <div class="progress-container">
+												<div class="progress"></div>
+											</div> #}
+										</div>
+										<audio src="{{asset('uploads/beats/' ~ beats.beatName)}}" class="song" data-playing="false"></audio>
+										<div class="img-container">
+											<a href="{{path('instrumental-info', {id: beats.id})}}"><img src="{{asset('uploads/images/' ~ beats.imageName)}}" alt="music-cover" class="img-cover"></a>
+										</div>
+										<div class="navigation">
+											<button class="action-btn">
+												<i class="fas fa-backward"></i>
+											</button>
+											<button class="action-btn action-btn-big bt-play">
+												<i class="fas fa-play"></i>
+											</button>
+										</div>
 									</div>
-								</div>
-								<audio src="{{asset('uploads/beats/' ~ beats.beatName)}}" class="song" data-playing="false"></audio>
-								<div class="img-container">
-									<a href="{{path('instrumental-info', {id: beats.id})}}"><img src="{{asset('uploads/images/' ~ beats.imageName)}}" alt="music-cover" class="img-cover"></a>
-								</div>
-								<div class="navigation">
-									<button class="action-btn">
-										<i class="fas fa-backward"></i>
-									</button>
-									<button class="action-btn action-btn-big bt-play">
-										<i class="fas fa-play"></i>
-									</button>
-								</div>
-							</div>
-						</td>
-						<td class="p-3 panier text-center align-self-center fw-bold">{{beats.name}}</td>
-						<td class="p-3 panier text-center fw-bold">{{beats.price}}€</td>
-						<td class="p-3 panier text-center">
-							<i class="fa-solid fa-xmark delete" data-id="{{beats.id}}"  data-orderid="{{orderBeats.id}}"></i>
-						</td>
-					</tr>
-					{# {% endfor %} #}
-
-					{% else %}
-						<tr class="panier">
-							<td colspan="3" class="p-3 panier fw-bold text-center">Votre panier est vide</td>
-						</tr>
-				{% endfor %}
-				{% if orderBeats.totalPrice is not null %}
-					<tr>
-					<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
-					<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
-					</tr>
-				{% elseif orderBeats.totalPrice == null %}
-					<tr>
-					<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
-					<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
-					</tr>
-				{% endif %}
-		</tbody>
-	</table>
-	{% if orderBeats is not null and orderBeats|length > 0 %}
-		<div class="d-flex justify-content-center">
-			<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 me-3 fw-bold">Continuer vos achats</button></a>
-			<button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 ms-3 fw-bold" id="checkout-button">Valider</button>
-		</div>
-	{% else %}
-		<div class="d-flex justify-content-center">
-			<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 fw-bold">Continuer vos achats</button></a>
-		</div>
-	{% endif %}
+								</td>
+								<td class="p-3 panier text-center align-self-center fw-bold">{{beats.name}}</td>
+								<td class="p-3 panier text-center fw-bold">{{beats.price}}€</td>
+								<td class="p-3 panier text-center">
+									<i class="fa-solid fa-xmark delete" data-id="{{beats.id}}"  data-orderid="{{orderBeats.id}}"></i>
+								</td>
+							</tr>
+							{% else %}
+								<tr class="panier">
+									<td colspan="3" class="p-3 panier fw-bold text-center">Votre panier est vide</td>
+								</tr>
+						{% endfor %}
+						{% if orderBeats.totalPrice is not null %}
+							<tr>
+							<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
+							<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
+							</tr>
+						{% elseif orderBeats.totalPrice == null %}
+							<tr>
+							<td colspan="2" class="p-3 panier fw-bold text-center">Total</td>
+							<td class="p-3 panier text-center align-self-center fw-bold">{{orderBeats.totalPrice}}€</td>
+							</tr>
+						{% endif %}
+				</tbody>
+			</table>
+			{% if orderBeats is not null and orderBeats|length > 0 %}
+				<div class="d-flex justify-content-center">
+					<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 me-3 fw-bold">Continuer vos achats</button></a>
+					<a href="{{path('app_delivery')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 mb-5 ms-3 fw-bold">Valider</button></a>
+				</div>
+			{% else %}
+				<div class="d-flex justify-content-center">
+					<a href="{{path('instrumental')}}"><button class="btn-style pt-2 pb-2 pe-3 ps-3 fw-bold">Continuer vos achats</button></a>
+				</div>
+			{% endif %}
+		{% else %}
+			<p class="text-center fw-bold mt-5 lien">Vous devez être <a href="{{path('app_login')}}" class="text-reset">connecté</a> pour effectuer des achats</p>
+		{% endif %}
 {% endblock %}
 {% block javascripts %}
 	<script>

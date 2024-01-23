@@ -2,20 +2,23 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Beats;
 use App\Entity\Statut;
 use DateTimeImmutable;
 use App\Entity\Commande;
 use App\Entity\OrderBeats;
-use App\Entity\User;
-use App\Repository\OrderBeatsRepository;
+use App\Form\ValiderPanierType;
 use App\Stripe\StripeService;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class PanierController extends AbstractController
 {
@@ -28,16 +31,12 @@ class PanierController extends AbstractController
 
 
     #[Route('/panier', name: 'panier')]
-    public function index(OrderBeatsRepository $orderBeatsRepository, $id=null): Response
+    public function index(): Response
     {
         if($this->getUser()){
-            // $commandes = $this->entityManager->getRepository(Commande::class)->findByUser($this->getUser());
             $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$this->getUser(), 'statut'=> 2,]);
             $orderBeats = $currentCommande->getOrderBeats();
-            // foreach($orderBeats->getBeats() as $beats){
-            //     dump($beats);
-            // }
-            // dd($orderBeats);
+
             return $this->render('panier/index.html.twig', [
                 'orderBeats' => $orderBeats,
                 'id' => $currentCommande?$currentCommande->getId():null,
@@ -48,7 +47,7 @@ class PanierController extends AbstractController
             ]);
         }
     }
-    // https://stackoverflow.com/questions/65849935/add-products-to-the-cart-jquery-ajax-symfony-twig
+    
     #[Route('/ajoutPanier', name: 'ajoutPanier')]
     public function ajoutPanier(Request $request)
     {
@@ -90,11 +89,8 @@ class PanierController extends AbstractController
         
     }
     #[Route('/suppPanier/{beats}/{orderBeats}', name: 'suppPanier')]
-    public function suppPanier(Request $request,Beats $beats ,OrderBeats $orderBeats): Response
+    public function suppPanier(Beats $beats ,OrderBeats $orderBeats): Response
     {
-        // dd($beats,$orderBeats );
-        
-        
         $id = $beats->getId();
         $orderBeats->removeBeat($beats);
         $price = $beats->getPrice();
@@ -105,6 +101,37 @@ class PanierController extends AbstractController
         $this->entityManager->flush();
 
         return $this->json(['id' => $id ]);
+    }
+
+    #[Route('/paiement-accepté', name: 'app_delivery')]
+    public function validerPanier(MailerInterface $mailer): Response
+    {
+
+        $user = $this->getUser();
+        $currentCommande = $this->entityManager->getRepository(Commande::class)->findOneBy(['user'=>$user, 'statut'=> 2,]);
+        $orderBeats = $currentCommande->getOrderBeats();
+        // $beats = $orderBeats->getBeats()->findAll();
+
+        $email = (new TemplatedEmail())
+
+            ->from(new Address('musicandbeats@beats.com', 'musicandbeats'))
+            ->to($user->getUserIdentifier())
+            //->priority(Email::PRIORITY_HIGH)
+            ->subject('Vos BEATS')
+            // ->attachFromPathforeach ($beats as $beat) {
+            //     ('/path/to/uploads/to/beats/' ~ {{beat.name}});
+            // })
+            ->attachFromPath('/path/to/beats/RAIN.mp3')
+            ->htmlTemplate('delivery/mail.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $mailer->send($email);
+
+        return $this->render('delivery/index.html.twig', [
+            'user' => $user,
+        ]);
     }
 
     // https://www.youtube.com/watch?v=bG5PYy6tp60
